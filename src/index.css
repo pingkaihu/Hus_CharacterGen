@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-slate-900 text-slate-100;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+/* 列印樣式 */
+@media print {
+  body {
+    @apply bg-white text-black;
+  }
+
+  header,
+  section:first-of-type {
+    display: none !important;
+  }
+
+  section:last-of-type {
+    @apply w-full max-w-none;
+    page-break-inside: avoid;
+  }
+
+  button {
+    display: none !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
+
