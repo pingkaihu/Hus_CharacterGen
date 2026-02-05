@@ -1,6 +1,20 @@
 // D&D 5e 規則常數
 
-import type { CharacterClass, SkillName, AbilityName } from "../types/character";
+import type { CharacterClass, SkillName, AbilityName, Race } from "../types/character";
+
+// 各種族的基礎速度（ft）
+export const RACE_BASE_SPEED: Record<Race, number> = {
+  Human: 30,
+  Elf: 30,
+  Dwarf: 25,
+  Halfling: 25,
+  Dragonborn: 30,
+  Gnome: 25,
+  "Half-Elf": 30,
+  "Half-Orc": 30,
+  Tiefling: 30,
+};
+
 
 // 熟練加值表：等級 -> 熟練加值
 export const PROFICIENCY_BONUS_BY_LEVEL: Record<number, number> = {

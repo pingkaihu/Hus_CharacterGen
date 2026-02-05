@@ -18,6 +18,7 @@ import {
   FULL_CASTER_SPELL_SLOTS,
   HALF_CASTER_SPELL_SLOTS,
   getCasterType,
+  RACE_BASE_SPEED,
 } from "./constants";
 
 /**
@@ -81,6 +82,21 @@ export function calculateMaxHP(character: Character): number {
 export function calculateArmorClass(character: Character): number {
   const dexMod = getAbilityModifier(character.abilityScores.dex);
   return 10 + dexMod;
+}
+
+/**
+ * 根據種族取得基礎速度
+ */
+export function getBaseSpeed(character: Character): number {
+  if (!character.race) return 30;
+  return RACE_BASE_SPEED[character.race] || 30;
+}
+
+/**
+ * 計算先攻值（Initiative）
+ */
+export function calculateInitiative(character: Character): number {
+  return getAbilityModifier(character.abilityScores.dex);
 }
 
 /**
@@ -216,6 +232,8 @@ export function calculateCharacterDerivedStats(
   const savingThrows = calculateSavingThrows(character);
   const skills = calculateSkills(character);
   const spellSlots = calculateSpellSlots(character);
+  const speed = getBaseSpeed(character);
+  const initiative = calculateInitiative(character);
 
   return {
     ...character,
@@ -227,5 +245,7 @@ export function calculateCharacterDerivedStats(
     savingThrows,
     skills,
     spellSlots: spellSlots || undefined,
+    speed,
+    initiative,
   };
 }

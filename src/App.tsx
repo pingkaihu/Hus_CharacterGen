@@ -80,8 +80,8 @@ function App() {
     setBaseCharacter((prev) => ({ ...prev, abilityScores: scores }));
   };
 
-  const handleBackgroundChange = (background: string) => {
-    setBaseCharacter((prev) => ({ ...prev, backgroundStory: background }));
+  const handlePersonalityChange = (updates: Partial<Character>) => {
+    setBaseCharacter((prev) => ({ ...prev, ...updates }));
   };
 
   const handleImageChange = (imageUrl: string | undefined) => {
@@ -89,24 +89,34 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950">
-      <header className="border-b border-slate-700 bg-slate-900/80 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <h1 className="text-lg font-semibold tracking-wide text-amber-300">
-            DnD 角色產生器
-          </h1>
-          <p className="text-xs text-slate-400">
-            React + TypeScript + Tailwind
+    <div className="min-h-screen flex flex-col bg-[#e6e2d6]">
+      <header className="no-print border-b-2 border-black bg-white/80 backdrop-blur sticky top-0 z-50">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-black rounded-sm flex items-center justify-center">
+              <span className="text-white font-serif text-2xl font-bold">&</span>
+            </div>
+            <h1 className="text-2xl font-bold tracking-tighter text-black uppercase">
+              Dungeons & Dragons <span className="text-red-800 font-serif lowercase italic font-normal ml-1">Character Generator</span>
+            </h1>
+          </div>
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-500">
+            5th Edition
           </p>
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-4 px-2 py-4 sm:px-4 md:flex-row">
-        <section className="w-full md:w-1/2 rounded-lg border border-slate-700 bg-slate-900/60 p-4 sm:p-6 shadow-lg shadow-slate-950/40 overflow-y-auto max-h-[calc(100vh-120px)]">
-          <h2 className="mb-4 text-base sm:text-lg font-semibold text-amber-200 border-b border-amber-800/40 pb-2">
-            編輯區
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 px-4 py-8 md:flex-row items-start">
+        {/* 編輯區 - 保持側邊欄樣式但配色調整 */}
+        <section className="no-print w-full md:w-[380px] shrink-0 rounded-none border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-y-auto max-h-[calc(100vh-120px)]">
+          <h2 className="mb-6 text-xl font-bold text-black uppercase tracking-tight border-b-2 border-black pb-2">
+            角色編輯器 <span className="text-xs font-normal normal-case">Character Editor</span>
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-8">
+            <ImageUpload
+              imageUrl={character.imageUrl}
+              onChange={handleImageChange}
+            />
             <BasicInfoForm
               character={character}
               onChange={handleBasicInfoChange}
@@ -116,33 +126,24 @@ function App() {
               onChange={handleAbilityScoresChange}
             />
             <BackgroundForm
-              background={character.backgroundStory || ""}
-              onChange={handleBackgroundChange}
-            />
-            <ImageUpload
-              imageUrl={character.imageUrl}
-              onChange={handleImageChange}
+              character={character}
+              onChange={handlePersonalityChange}
             />
           </div>
         </section>
 
-        <section className="w-full md:w-1/2 rounded-lg border border-amber-800/60 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 p-4 shadow-xl shadow-black/60 overflow-y-auto max-h-[calc(100vh-120px)]">
-          <h2 className="mb-4 text-base sm:text-lg font-semibold text-amber-200 border-b border-amber-800/40 pb-2">
-            角色卡預覽
-          </h2>
-          <div className="space-y-4">
-            {character.imageUrl && (
-              <div className="mb-4">
-                <img
-                  src={character.imageUrl}
-                  alt="角色"
-                  className="mx-auto max-h-48 rounded border border-amber-700/60 object-contain"
-                />
-              </div>
-            )}
+        {/* 預覽區 - 核心角色卡 */}
+        <section className="flex-1 w-full dnd-parchment p-8 sm:p-12 shadow-xl overflow-y-auto max-h-none md:max-h-[calc(100vh-80px)] print:max-h-none print:p-0">
+          <div className="space-y-8">
             <CharacterCard character={character} />
-            <DescriptionPanel character={character} />
-            <ExportControls character={character} />
+            <div className="flex flex-col lg:flex-row gap-8">
+              <div className="flex-1">
+                <DescriptionPanel character={character} />
+              </div>
+              <div className="no-print w-full lg:w-48">
+                <ExportControls character={character} />
+              </div>
+            </div>
           </div>
         </section>
       </main>

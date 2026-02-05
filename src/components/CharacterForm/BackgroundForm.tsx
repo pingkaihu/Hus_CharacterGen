@@ -1,21 +1,25 @@
 import React from "react";
+import type { Character } from "../../types/character";
 
 interface BackgroundFormProps {
-  background: string;
-  onChange: (background: string) => void;
+  character: Partial<Character>;
+  onChange: (updates: Partial<Character>) => void;
 }
 
-export function BackgroundForm({ background, onChange }: BackgroundFormProps) {
+export function BackgroundForm({ character, onChange }: BackgroundFormProps) {
   return (
-    <div className="space-y-2 rounded-lg border border-slate-700 bg-slate-800/40 p-4">
-      <h3 className="text-sm font-semibold text-amber-300">背景故事</h3>
+    <div className="space-y-3">
+      <label className="dnd-label !text-left">背景故事 Background Story</label>
       <textarea
-        value={background}
-        onChange={(e) => onChange(e.target.value)}
+        value={character.backgroundStory || ""}
+        onChange={(e) => onChange({ backgroundStory: e.target.value })}
         rows={6}
-        className="w-full rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-500 focus:outline-none resize-y"
-        placeholder="輸入角色的背景故事、經歷、動機等..."
+        className="dnd-input-underlined w-full text-sm leading-relaxed font-serif italic resize-y"
+        placeholder="輸入角色的背景故事、經歷、動機..."
       />
     </div>
   );
 }
+
+// 保留別名以保持向後兼容
+export { BackgroundForm as PersonalityForm };

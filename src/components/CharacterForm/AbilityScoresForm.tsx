@@ -29,13 +29,13 @@ export function AbilityScoresForm({
   };
 
   return (
-    <div className="space-y-4 rounded-lg border border-slate-700 bg-slate-800/40 p-4">
-      <h3 className="text-sm font-semibold text-amber-300">能力值</h3>
-      <p className="text-xs text-slate-400">
-        輸入角色的六項基本能力值（範圍：1-30）
-      </p>
+    <div className="space-y-4">
+      <div className="flex justify-between items-end border-b-2 border-black pb-1">
+        <label className="dnd-label !mt-0 !text-left">Ability Scores</label>
+        <span className="text-[10px] italic text-gray-500">Range: 1-30</span>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-x-6 gap-y-4">
         {(Object.keys(ABILITY_LABELS) as Array<keyof AbilityScores>).map(
           (ability) => {
             const score = abilityScores[ability];
@@ -43,14 +43,11 @@ export function AbilityScoresForm({
             const modifierStr = modifier >= 0 ? `+${modifier}` : `${modifier}`;
 
             return (
-              <div
-                key={ability}
-                className="rounded border border-slate-600 bg-slate-800/60 p-3"
-              >
-                <label className="block text-xs text-slate-300 mb-1">
+              <div key={ability} className="flex flex-col">
+                <label className="text-[10px] font-bold uppercase tracking-tight text-gray-600">
                   {ABILITY_LABELS[ability]}
                 </label>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <input
                     type="number"
                     min="1"
@@ -59,10 +56,10 @@ export function AbilityScoresForm({
                     onChange={(e) =>
                       handleChange(ability, parseInt(e.target.value) || 1)
                     }
-                    className="w-16 rounded border border-slate-600 bg-slate-900 px-2 py-1 text-sm font-semibold text-slate-100 focus:border-amber-500 focus:outline-none"
+                    className="dnd-input-underlined w-12 text-lg font-bold font-serif py-0"
                   />
-                  <span className="text-sm font-semibold text-amber-300">
-                    ({modifierStr})
+                  <span className="text-xs font-bold text-red-800 bg-red-50 px-1.5 py-0.5 rounded border border-red-200">
+                    {modifierStr}
                   </span>
                 </div>
               </div>

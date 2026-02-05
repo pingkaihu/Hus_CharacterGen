@@ -74,29 +74,27 @@ const CLASS_LABELS: Record<CharacterClass, string> = {
 
 export function BasicInfoForm({ character, onChange }: BasicInfoFormProps) {
   return (
-    <div className="space-y-4 rounded-lg border border-slate-700 bg-slate-800/40 p-4">
-      <h3 className="text-sm font-semibold text-amber-300">基本資料</h3>
-
+    <div className="space-y-6">
       <div>
-        <label className="block text-xs text-slate-300 mb-1">角色姓名</label>
+        <label className="dnd-label !text-left">Character Name</label>
         <input
           type="text"
           value={character.name || ""}
           onChange={(e) => onChange({ name: e.target.value })}
-          className="w-full rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:border-amber-500 focus:outline-none"
-          placeholder="輸入角色姓名"
+          className="dnd-input-underlined w-full text-lg font-serif"
+          placeholder="Name your hero..."
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-x-6 gap-y-4">
         <div>
-          <label className="block text-xs text-slate-300 mb-1">種族</label>
+          <label className="dnd-label !text-left">Race</label>
           <select
             value={character.race || ""}
             onChange={(e) => onChange({ race: e.target.value as Race })}
-            className="w-full rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:border-amber-500 focus:outline-none"
+            className="dnd-input-underlined w-full text-sm py-1 cursor-pointer"
           >
-            <option value="">選擇種族</option>
+            <option value="">Choose Race</option>
             {RACES.map((race) => (
               <option key={race} value={race}>
                 {RACE_LABELS[race]} ({race})
@@ -106,13 +104,13 @@ export function BasicInfoForm({ character, onChange }: BasicInfoFormProps) {
         </div>
 
         <div>
-          <label className="block text-xs text-slate-300 mb-1">職業</label>
+          <label className="dnd-label !text-left">Class</label>
           <select
             value={character.class || ""}
             onChange={(e) => onChange({ class: e.target.value as CharacterClass })}
-            className="w-full rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:border-amber-500 focus:outline-none"
+            className="dnd-input-underlined w-full text-sm py-1 cursor-pointer"
           >
-            <option value="">選擇職業</option>
+            <option value="">Choose Class</option>
             {CLASSES.map((cls) => (
               <option key={cls} value={cls}>
                 {CLASS_LABELS[cls]} ({cls})
@@ -120,29 +118,27 @@ export function BasicInfoForm({ character, onChange }: BasicInfoFormProps) {
             ))}
           </select>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs text-slate-300 mb-1">等級</label>
+          <label className="dnd-label !text-left">Level</label>
           <input
             type="number"
             min="1"
             max="20"
             value={character.level || 1}
             onChange={(e) => onChange({ level: parseInt(e.target.value) || 1 })}
-            className="w-full rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:border-amber-500 focus:outline-none"
+            className="dnd-input-underlined w-full text-sm py-1 font-serif"
           />
         </div>
 
         <div>
-          <label className="block text-xs text-slate-300 mb-1">陣營</label>
+          <label className="dnd-label !text-left">Alignment</label>
           <select
             value={character.alignment || ""}
             onChange={(e) => onChange({ alignment: e.target.value as Alignment })}
-            className="w-full rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:border-amber-500 focus:outline-none"
+            className="dnd-input-underlined w-full text-sm py-1 cursor-pointer"
           >
-            <option value="">選擇陣營</option>
+            <option value="">Set Alignment</option>
             {ALIGNMENTS.map((align) => (
               <option key={align} value={align}>
                 {align}

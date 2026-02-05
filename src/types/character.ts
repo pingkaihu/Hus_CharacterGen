@@ -111,10 +111,10 @@ export interface Character {
   class: CharacterClass | "";
   level: number;
   alignment: Alignment | "";
-  
+
   // 能力值
   abilityScores: AbilityScores;
-  
+
   // 衍生數值（由規則計算）
   abilityModifiers?: AbilityModifiers;
   maxHP?: number;
@@ -124,11 +124,20 @@ export interface Character {
   savingThrows?: SavingThrows;
   skills?: SkillSet;
   spellSlots?: SpellSlots;
-  
+  speed?: number; // 速度（根據種族計算）
+  initiative?: number; // 先攻（DEX 修正值）
+
+  // 人格特質
+  personalityTraits?: string;
+  ideals?: string;
+  bonds?: string;
+  flaws?: string;
+
   // 背景與圖片
   backgroundStory: string;
   imageUrl?: string; // 使用 URL.createObjectURL 產生的本機 URL
-  
+
   // 自動生成的人物介紹
   description?: string;
 }
+
