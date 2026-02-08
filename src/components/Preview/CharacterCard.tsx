@@ -47,6 +47,56 @@ const SKILLS_BY_ABILITY: Record<AbilityName, { name: SkillName; zh: string }[]> 
   ],
 };
 
+// 職業生命骰
+const CLASS_HIT_DICE: Record<string, number> = {
+  Barbarian: 12,
+  Fighter: 10, Paladin: 10, Ranger: 10,
+  Bard: 8, Cleric: 8, Druid: 8, Monk: 8, Rogue: 8, Warlock: 8,
+  Sorcerer: 6, Wizard: 6,
+};
+
+// 根據職業和等級計算法術位（簡化版 D&D 5e 規則）
+function getSpellSlots(charClass: string, level: number): number[] {
+  // 全施法者法術位表
+  const fullCasterSlots: Record<number, number[]> = {
+    1: [2], 2: [3], 3: [4, 2], 4: [4, 3], 5: [4, 3, 2],
+    6: [4, 3, 3], 7: [4, 3, 3, 1], 8: [4, 3, 3, 2], 9: [4, 3, 3, 3, 1],
+    10: [4, 3, 3, 3, 2], 11: [4, 3, 3, 3, 2, 1], 12: [4, 3, 3, 3, 2, 1],
+    13: [4, 3, 3, 3, 2, 1, 1], 14: [4, 3, 3, 3, 2, 1, 1], 15: [4, 3, 3, 3, 2, 1, 1, 1],
+    16: [4, 3, 3, 3, 2, 1, 1, 1], 17: [4, 3, 3, 3, 2, 1, 1, 1, 1], 18: [4, 3, 3, 3, 3, 1, 1, 1, 1],
+    19: [4, 3, 3, 3, 3, 2, 1, 1, 1], 20: [4, 3, 3, 3, 3, 2, 2, 1, 1],
+  };
+
+  // 半施法者法術位表（Paladin, Ranger）
+  const halfCasterSlots: Record<number, number[]> = {
+    1: [], 2: [2], 3: [3], 4: [3], 5: [4, 2],
+    6: [4, 2], 7: [4, 3], 8: [4, 3], 9: [4, 3, 2],
+    10: [4, 3, 2], 11: [4, 3, 3], 12: [4, 3, 3], 13: [4, 3, 3, 1],
+    14: [4, 3, 3, 1], 15: [4, 3, 3, 2], 16: [4, 3, 3, 2], 17: [4, 3, 3, 3, 1],
+    18: [4, 3, 3, 3, 1], 19: [4, 3, 3, 3, 2], 20: [4, 3, 3, 3, 2],
+  };
+
+  // Warlock 契約魔法
+  const warlockSlots: Record<number, number[]> = {
+    1: [1], 2: [2], 3: [2], 4: [2], 5: [2],
+    6: [2], 7: [2], 8: [2], 9: [2], 10: [2],
+    11: [3], 12: [3], 13: [3], 14: [3], 15: [3],
+    16: [3], 17: [4], 18: [4], 19: [4], 20: [4],
+  };
+
+  const fullCasters = ["Bard", "Cleric", "Druid", "Sorcerer", "Wizard"];
+  const halfCasters = ["Paladin", "Ranger"];
+
+  if (fullCasters.includes(charClass)) {
+    return fullCasterSlots[level] || [];
+  } else if (halfCasters.includes(charClass)) {
+    return halfCasterSlots[level] || [];
+  } else if (charClass === "Warlock") {
+    return warlockSlots[level] || [];
+  }
+  return [];
+}
+
 export function CharacterCard({ character }: CharacterCardProps) {
   if (!character.name && !character.class) {
     return (
@@ -82,15 +132,15 @@ export function CharacterCard({ character }: CharacterCardProps) {
     : null;
 
   return (
-    <div className="max-w-[950px] mx-auto space-y-6 text-[#1a1a1a] select-none">
+    <div className="max-w-[950px] mx-auto space-y-4 text-[#1a1a1a] select-none">
       {/* 頂部橫向看板 */}
-      <div className="flex flex-col md:flex-row gap-4 border-2 border-black p-4 bg-white relative">
+      <div className="flex flex-col md:flex-row gap-4 border-2 border-black p-4 bg-[#fdfaf2] shadow-sm relative">
         {character.imageUrl && (
           <div className="w-full md:w-24 h-24 md:h-auto md:min-h-[120px] flex-shrink-0 border-2 border-black overflow-hidden">
             <img src={character.imageUrl} alt={name} className="w-full h-full object-cover" />
           </div>
         )}
-        <div className="flex-1 flex flex-col justify-end border-r-0 md:border-r-2 border-black pr-4 mb-4 md:mb-0">
+        <div className="flex-1 flex flex-col justify-start border-r-0 md:border-r-2 border-black pr-4 mb-4 md:mb-0">
           <div className="text-2xl font-bold font-serif underline decoration-1 underline-offset-4">{name}</div>
           <label className="dnd-label text-left">角色名稱</label>
         </div>
@@ -115,22 +165,24 @@ export function CharacterCard({ character }: CharacterCardProps) {
               const mod = character.abilityModifiers?.[key] ?? 0;
               const modStr = mod >= 0 ? `+${mod}` : `${mod}`;
               return (
-                <div key={key} className="border border-black p-2 bg-white flex items-center gap-2">
-                  <div className="w-10 h-10 border-2 border-black rounded-full flex items-center justify-center text-sm font-bold bg-gray-50">
-                    {modStr}
+                <div key={key} className="border border-black p-2 bg-[#fdfaf2] flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 border-2 border-black rounded-full flex items-center justify-center text-sm font-bold bg-gray-50 flex-shrink-0">
+                      {modStr}
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold">{ABILITY_LABELS[key].zh}</div>
+                      <div className="text-[10px] text-gray-400">{ABILITY_LABELS[key].en}</div>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <div className="text-xs font-bold">{ABILITY_LABELS[key].zh}</div>
-                    <div className="text-[10px] text-gray-400">{ABILITY_LABELS[key].en}</div>
-                  </div>
-                  <div className="text-lg font-bold font-serif">{score}</div>
+                  <div className="text-xl font-bold font-serif min-w-[2rem] text-right">{score}</div>
                 </div>
               );
             })}
           </div>
 
           {/* 熟練加值 */}
-          <div className="border border-black flex items-center p-2 gap-2 bg-white">
+          <div className="border border-black flex items-center p-2 gap-2 bg-[#fdfaf2]">
             <div className="w-8 h-8 border-2 border-black rounded-full flex items-center justify-center font-bold text-sm bg-gray-100">
               +{pb}
             </div>
@@ -146,7 +198,7 @@ export function CharacterCard({ character }: CharacterCardProps) {
           <h3 className="text-xs font-bold uppercase border-b border-black pb-1">
             豁免 <span className="text-gray-400 font-normal">Saving Throws</span>
           </h3>
-          <div className="border border-black bg-white p-2 grid grid-cols-2 gap-1">
+          <div className="border border-black bg-[#fdfaf2] p-2 grid grid-cols-2 gap-1">
             {(Object.keys(ABILITY_LABELS) as AbilityName[]).map((key) => {
               const saveValue = character.savingThrows?.[key] ?? (character.abilityModifiers?.[key] ?? 0);
               const saveStr = saveValue >= 0 ? `+${saveValue}` : `${saveValue}`;
@@ -169,39 +221,72 @@ export function CharacterCard({ character }: CharacterCardProps) {
             戰鬥 <span className="text-gray-400 font-normal">Combat</span>
           </h3>
           <div className="grid grid-cols-3 gap-2">
-            <CombatBox label="AC" value={ac} icon="shield" />
+            <CombatBox label="護甲等級 AC" value={ac} icon="shield" />
             <CombatBox label="先攻" value={character.initiative ?? 0} prefix="+" />
             <CombatBox label="速度" value={`${character.speed ?? 30}ft`} />
           </div>
 
           {/* 生命值 */}
-          <div className="border-2 border-black bg-white">
-            <div className="h-14 flex items-center justify-center font-serif text-3xl font-bold text-red-800">
+          <div className="border-2 border-black bg-[#fdfaf2]">
+            <div className="h-14 flex items-center justify-center font-serif text-3xl font-bold text-gray-800">
               {hp}
             </div>
             <div className="bg-black text-white text-center py-1 text-xs font-bold">
-              生命值 HP
+              最大生命值 MAX HP
             </div>
           </div>
 
-          {/* 法術豁免 DC + 生命骰 */}
-          <div className="grid grid-cols-2 gap-2">
-            <div className="border border-black p-2 bg-white text-center">
-              <div className="font-bold text-lg font-serif">{level}d8</div>
-              <div className="text-[10px] text-gray-500">生命骰</div>
+          {/* 生命骰 */}
+          <div className="border border-black p-2 bg-[#fdfaf2] flex items-center justify-between">
+            <div>
+              <span className="font-bold text-sm">生命骰</span>
+              <span className="text-xs text-gray-500 ml-1">Hit Dice</span>
             </div>
-            {spellDC ? (
-              <div className="border border-black p-2 bg-white text-center">
-                <div className="font-bold text-lg font-serif text-red-800">{spellDC}</div>
-                <div className="text-[10px] text-gray-500">法術 DC</div>
-              </div>
-            ) : (
-              <div className="border border-black p-2 bg-gray-100 text-center">
-                <div className="font-bold text-lg font-serif text-gray-400">—</div>
-                <div className="text-[10px] text-gray-400">法術 DC</div>
-              </div>
-            )}
+            <div className="font-bold text-lg font-serif">
+              {level}d{CLASS_HIT_DICE[character.class ?? ""] || 8}
+            </div>
           </div>
+
+          {/* 法術資訊區塊 */}
+          {spellAbility && (
+            <div className="border-2 border-black bg-[#fdfaf2] p-3 space-y-2">
+              <h4 className="text-xs font-bold uppercase border-b border-black/30 pb-1 text-gray-800">
+                法術 <span className="text-gray-400 font-normal">Spellcasting</span>
+              </h4>
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-white/60 border border-black/30 p-2 rounded text-center">
+                  <div className="font-bold text-lg font-serif text-gray-800">{spellDC}</div>
+                  <div className="text-[9px] text-gray-600">法術豁免 DC</div>
+                </div>
+                <div className="bg-white/60 border border-black/30 p-2 rounded text-center">
+                  <div className="font-bold text-lg font-serif text-gray-800">
+                    +{pb + (character.abilityModifiers?.[spellAbility] ?? 0)}
+                  </div>
+                  <div className="text-[9px] text-gray-600">法術攻擊加值</div>
+                </div>
+                <div className="bg-white/60 border border-black/30 p-2 rounded text-center">
+                  <div className="font-bold text-lg font-serif text-gray-800">
+                    {ABILITY_LABELS[spellAbility].en}
+                  </div>
+                  <div className="text-[9px] text-gray-600">施法屬性</div>
+                </div>
+              </div>
+              {/* 法術位 */}
+              <div className="text-[10px] space-y-1">
+                <div className="font-bold text-gray-700">法術位 Spell Slots</div>
+                <div className="grid grid-cols-3 gap-1">
+                  {getSpellSlots(character.class ?? "", level).map((slots, idx) => (
+                    slots > 0 && (
+                      <div key={idx} className="bg-white/60 px-2 py-1 rounded border border-black/20 text-center">
+                        <span className="text-gray-600">{idx + 1}環</span>
+                        <span className="font-bold ml-1">×{slots}</span>
+                      </div>
+                    )
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 右欄：技能（按能力分類） */}
@@ -209,7 +294,7 @@ export function CharacterCard({ character }: CharacterCardProps) {
           <h3 className="text-xs font-bold uppercase border-b border-black pb-1">
             技能 <span className="text-gray-400 font-normal">Skills</span>
           </h3>
-          <div className="border border-black bg-white p-2 space-y-2 max-h-[450px] overflow-y-auto">
+          <div className="border border-black bg-[#fdfaf2] p-2 space-y-2">
             {(Object.keys(SKILLS_BY_ABILITY) as AbilityName[]).map((ability) => {
               const skills = SKILLS_BY_ABILITY[ability];
               if (skills.length === 0) return null;

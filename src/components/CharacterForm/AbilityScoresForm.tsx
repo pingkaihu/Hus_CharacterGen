@@ -56,7 +56,7 @@ export function AbilityScoresForm({
                     onChange={(e) =>
                       handleChange(ability, parseInt(e.target.value) || 1)
                     }
-                    className="dnd-input-underlined w-12 text-lg font-bold font-serif py-0"
+                    className="dnd-input-underlined w-16 text-lg font-bold font-serif py-0 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                   <span className="text-xs font-bold text-red-800 bg-red-50 px-1.5 py-0.5 rounded border border-red-200">
                     {modifierStr}

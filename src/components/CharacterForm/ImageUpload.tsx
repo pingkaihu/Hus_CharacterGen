@@ -34,8 +34,8 @@ export function ImageUpload({ imageUrl, onChange }: ImageUploadProps) {
   };
 
   return (
-    <div className="space-y-2 rounded-lg border border-slate-700 bg-slate-800/40 p-4">
-      <h3 className="text-sm font-semibold text-amber-300">角色圖像</h3>
+    <div className="space-y-2 border border-black/30 bg-[#fdfaf2] p-4 rounded">
+      <h3 className="text-sm font-bold text-gray-800 border-b border-black/20 pb-1">角色圖像</h3>
 
       {imageUrl ? (
         <div className="space-y-2">
@@ -43,13 +43,13 @@ export function ImageUpload({ imageUrl, onChange }: ImageUploadProps) {
             <img
               src={imageUrl}
               alt="角色預覽"
-              className="max-h-48 w-full rounded border border-slate-600 object-contain"
+              className="max-h-48 w-full rounded border border-black/30 object-contain bg-white"
             />
           </div>
           <button
             type="button"
             onClick={handleRemove}
-            className="w-full rounded border border-red-600 bg-red-900/30 px-3 py-2 text-xs text-red-300 hover:bg-red-900/50 focus:outline-none transition-colors"
+            className="w-full rounded border border-amber-700/50 bg-amber-100/80 px-3 py-2 text-xs text-amber-900 hover:bg-amber-200/80 focus:outline-none transition-colors"
           >
             移除圖片
           </button>
@@ -66,12 +66,12 @@ export function ImageUpload({ imageUrl, onChange }: ImageUploadProps) {
           />
           <label
             htmlFor="image-upload"
-            className="flex cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed border-slate-600 bg-slate-800/60 p-6 text-center hover:border-amber-500 hover:bg-slate-800/80 transition-colors"
+            className="flex cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed border-black/30 bg-white/60 p-6 text-center hover:border-red-800 hover:bg-white/80 transition-colors"
           >
-            <span className="text-sm text-slate-400">
+            <span className="text-sm text-gray-600">
               點擊或拖放圖片到此處
             </span>
-            <span className="mt-1 text-xs text-slate-500">
+            <span className="mt-1 text-xs text-gray-400">
               支援 JPG、PNG、GIF 等格式
             </span>
           </label>

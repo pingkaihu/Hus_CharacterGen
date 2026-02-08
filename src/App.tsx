@@ -93,15 +93,12 @@ function App() {
       <header className="no-print border-b-2 border-black bg-white/80 backdrop-blur sticky top-0 z-50">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-black rounded-sm flex items-center justify-center">
-              <span className="text-white font-serif text-2xl font-bold">&</span>
-            </div>
             <h1 className="text-2xl font-bold tracking-tighter text-black uppercase">
-              Dungeons & Dragons <span className="text-red-800 font-serif lowercase italic font-normal ml-1">Character Generator</span>
+              DnD-like CharacterGen
             </h1>
           </div>
           <p className="text-xs font-bold uppercase tracking-widest text-gray-500">
-            5th Edition
+            Compatible with DnD 5e
           </p>
         </div>
       </header>
