@@ -53,10 +53,23 @@
   }
 }
 
-/* 列印樣式 */
+/* 列印樣式 - 確保所有內容在單頁顯示 */
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
   body {
-    @apply bg-white text-black;
+    background: white !important;
+    color: black !important;
+    font-size: 10px !important;
+    line-height: 1.2 !important;
   }
 
   header,
@@ -65,16 +78,140 @@
   }
 
   main {
-    @apply p-0 m-0 !max-w-none;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    display: block !important;
+  }
+
+  /* 角色卡主容器 */
+  .max-w-\[950px\] {
+    max-width: 100% !important;
+    margin: 0 !important;
+    gap: 4px !important;
+  }
+
+  /* 頂部橫幅 */
+  .border-2.border-black.p-4 {
+    padding: 8px !important;
+    gap: 8px !important;
+  }
+
+  /* 三欄網格佈局 */
+  .grid.grid-cols-1.md\:grid-cols-12 {
+    display: grid !important;
+    grid-template-columns: 2fr 2fr 3fr !important;
+    gap: 8px !important;
+  }
+
+  /* 能力值和豁免欄位 */
+  .md\:col-span-3 {
+    grid-column: span 1 !important;
+    gap: 2px !important;
+  }
+
+  .md\:col-span-4 {
+    grid-column: span 1 !important;
+    gap: 2px !important;
+  }
+
+  .md\:col-span-5 {
+    grid-column: span 1 !important;
+  }
+
+  /* 縮小所有間距 */
+  .space-y-2 > * + *,
+  .space-y-3 > * + *,
+  .space-y-4 > * + * {
+    margin-top: 2px !important;
+  }
+
+  .gap-2, .gap-3, .gap-4 {
+    gap: 2px !important;
+  }
+
+  .p-2, .p-3 {
+    padding: 4px !important;
+  }
+
+  /* 縮小字體 */
+  .text-xs {
+    font-size: 8px !important;
+  }
+
+  .text-sm {
+    font-size: 9px !important;
+  }
+
+  .text-lg {
+    font-size: 12px !important;
+  }
+
+  .text-xl {
+    font-size: 14px !important;
+  }
+
+  .text-2xl {
+    font-size: 16px !important;
+  }
+
+  .text-3xl {
+    font-size: 18px !important;
+  }
+
+  .text-\[9px\], .text-\[10px\] {
+    font-size: 7px !important;
+  }
+
+  /* 能力值圓圈縮小 */
+  .w-10.h-10, .w-12.h-12 {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 10px !important;
+  }
+
+  /* 戰鬥數值框縮小 */
+  .w-10.h-10.border-2 {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  /* 生命值區塊 */
+  .h-14 {
+    height: 32px !important;
+  }
+
+  /* 角色圖片縮小 */
+  .md\:w-24 {
+    width: 60px !important;
+    min-height: 60px !important;
+  }
+
+  /* 技能區塊不滾動 */
+  .max-h-\[450px\] {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* 法術區塊 */
+  .border-2.border-black.bg-\[\#fdfaf2\] {
+    border-width: 1px !important;
+  }
+
+  /* 避免分頁 */
+  .max-w-\[950px\] > * {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* 羊皮紙背景保持 */
+  .bg-\[\#fdfaf2\] {
+    background-color: #fdfaf2 !important;
   }
 
   .dnd-parchment {
-    @apply shadow-none border-0;
-    background-image: none;
-  }
-
-  /* 確保三欄佈局在列印時保持 */
-  .grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    background-image: none !important;
   }
 }
